@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>FoodDispatcher.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JaCoCoverage analysis of project &quot;PlaneObserver&quot; (powered by JaCoCo from EclEmma)</a> &gt; <a href="index.source.html" class="el_package">planeobserver</a> &gt; <span class="el_source">FoodDispatcher.java</span></div><h1>FoodDispatcher.java</h1><pre class="source lang-java linenums">/**
+ * @author Christopher Burrell
+ * Student number 7145969
+ * ICA 1 - Part 2
+ * Airport routing controller
+ * Observer design pattern
+ */
+package planeobserver;
+
+import java.util.ArrayList;
+
+/**
+ * FoodDispatcher class
+ */
+public class FoodDispatcher implements PlaneObserver, FoodSubject
+{
+    private ArrayList&lt;FoodObserver&gt; observers;
+    
+    /**
+     * Constructor for FoodDispatcher
+     */   
+    FoodDispatcher()
+<span class="fc" id="L23">    {</span>
+<span class="fc" id="L24">        observers = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L25">    }</span>
+    
+    /**
+     * Constructor for FoodDispatcher
+     * @param observers list of observers
+     */   
+    FoodDispatcher(ArrayList&lt;FoodObserver&gt; observers)
+<span class="fc" id="L32">    {</span>
+<span class="fc" id="L33">        this.observers = new ArrayList&lt;&gt;();</span>
+<span class="fc bfc" id="L34" title="All 2 branches covered.">        for (FoodObserver o : observers)</span>
+        {
+<span class="fc" id="L36">            this.observers.add(o);</span>
+<span class="fc" id="L37">        }        </span>
+<span class="fc" id="L38">    }   </span>
+    
+    /**
+     * Constructor for FoodDispatcher
+     * @param observer FoodObserver to add to observers array list
+     */   
+    FoodDispatcher(FoodObserver observer)
+<span class="fc" id="L45">    {</span>
+<span class="fc" id="L46">        observers = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L47">        observers.add(observer);</span>
+<span class="fc" id="L48">    }      </span>
+    
+    /**
+     * Initiate dispatch of food to the relevant parking bay
+     * @param parkingBayNumber bay number plane will park at
+     * @param aircraftId aircraft Id
+     */    
+    @Override
+    public void updateBayAssigned(int parkingBayNumber, String aircraftId) 
+    {
+<span class="fc" id="L58">        int quantity = getQuantity(aircraftId);</span>
+<span class="fc bfc" id="L59" title="All 3 branches covered.">        switch (quantity) </span>
+        {
+            case -1:
+<span class="fc" id="L62">                System.out.println(&quot;Invalid aircraft id for food dispatch. &quot; +</span>
+                        &quot;Method call to investigate food requirements.\n&quot;);
+<span class="fc" id="L64">                break;</span>
+            case 0:
+<span class="fc" id="L66">                System.out.println(&quot;Aircraft id indicates no food required. &quot; +</span>
+                        &quot;Method call to investigate food requirements.\n&quot;);
+<span class="fc" id="L68">                break;</span>
+            default:
+<span class="fc" id="L70">                notifyObserversAssignedBay(parkingBayNumber,quantity);</span>
+                break;             
+        }
+<span class="fc" id="L73">    }</span>
+    
+    /**
+     * Notify food observers of parking bay number and quantity of food needed
+     * @param parkingBayNumber bay number to dispatch to
+     * @param quantity units of food to dispatch
+     */
+    @Override
+    public void notifyObserversAssignedBay(int parkingBayNumber,int quantity) 
+    {
+<span class="fc bfc" id="L83" title="All 2 branches covered.">        for (FoodObserver o : observers)</span>
+        {
+<span class="fc" id="L85">            o.updateBayAssigned(parkingBayNumber,quantity);</span>
+<span class="fc" id="L86">        } </span>
+<span class="fc" id="L87">    }</span>
+    
+    /**
+     * Initiate loading of food to parked plane
+     * @param parkingBayNumber bay number plane will park at
+     */    
+    @Override
+    public void updatePlaneParked(int parkingBayNumber) 
+    {    
+<span class="fc" id="L96">        notifyObserversPlaneParked(parkingBayNumber);</span>
+<span class="fc" id="L97">    }</span>
+
+    /**
+     * Notify food observers that plane is ready to be loaded
+     * @param parkingBayNumber bay number to dispatch to
+     */
+    @Override
+    public void notifyObserversPlaneParked(int parkingBayNumber) 
+    {
+<span class="fc bfc" id="L106" title="All 2 branches covered.">        for (FoodObserver o : observers)</span>
+        {
+<span class="fc" id="L108">            o.updatePlaneParked(parkingBayNumber);</span>
+<span class="fc" id="L109">        } </span>
+<span class="fc" id="L110">    }</span>
+    
+    /**
+     * Register a food observer
+     * @param o Observer to be registered
+     */
+    @Override
+    public void registerObserver(FoodObserver o) 
+    {
+<span class="fc bfc" id="L119" title="All 4 branches covered.">        if(!observers.contains(o) &amp;&amp; o != null)</span>
+        {
+<span class="fc" id="L121">            observers.add(o);</span>
+        }
+<span class="fc" id="L123">    }</span>
+
+     /**
+     * Unregister a food observer
+     * @param o Observer to be unregistered
+     */
+    @Override
+    public void unregisterObserver(FoodObserver o) 
+    {
+<span class="fc" id="L132">        observers.remove(o);  </span>
+<span class="fc" id="L133">    }</span>
+    
+    /**
+     * Get list of observers
+     * @return array list of observers
+     */
+    public ArrayList&lt;FoodObserver&gt; getObservers() 
+    {
+<span class="fc" id="L141">        return observers;</span>
+    }
+    
+    /**
+     * Set list of observers
+     * @param observers array list of observers
+     */
+    public void setObservers(ArrayList&lt;FoodObserver&gt; observers) 
+    {
+<span class="fc" id="L150">        this.observers = observers;</span>
+<span class="fc" id="L151">    }</span>
+
+    /**
+     * Get quantity of food needed for plane
+     * @param aircraftId id code assigned based on quantity of food needed
+     * @return quantity of food to be dispatch
+     */
+    public int getQuantity(String aircraftId) 
+    {        
+<span class="fc bfc" id="L160" title="All 2 branches covered.">        if(aircraftId == null)</span>
+        {
+<span class="fc" id="L162">            return -1;</span>
+        }
+<span class="fc" id="L164">        aircraftId = aircraftId.trim();</span>
+<span class="fc bfc" id="L165" title="All 2 branches covered.">        if (aircraftId.isEmpty())</span>
+        {
+<span class="fc" id="L167">            return -1;</span>
+        }
+<span class="fc bfc" id="L169" title="All 4 branches covered.">        else if ((aircraftId.charAt(0) &gt;= 'a' &amp;&amp; aircraftId.charAt(0) &lt;= 'm')</span>
+<span class="fc bfc" id="L170" title="All 4 branches covered.">                || (aircraftId.charAt(0) &gt;= 'A' &amp;&amp; aircraftId.charAt(0) &lt;= 'M'))</span>
+        {
+<span class="fc" id="L172">            return 50;</span>
+        }
+<span class="fc bfc" id="L174" title="All 4 branches covered.">        else if((aircraftId.charAt(0) &gt;= 'n' &amp;&amp; aircraftId.charAt(0) &lt;= 'z')</span>
+<span class="fc bfc" id="L175" title="All 4 branches covered.">                || (aircraftId.charAt(0) &gt;= 'N' &amp;&amp; aircraftId.charAt(0) &lt;= 'Z'))</span>
+        {
+<span class="fc" id="L177">            return 100;</span>
+        }
+        else
+        {
+<span class="fc" id="L181">            return 0;  </span>
+        }
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.6.201602180812</span></div></body></html>

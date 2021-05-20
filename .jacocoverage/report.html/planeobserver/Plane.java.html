@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>Plane.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JaCoCoverage analysis of project &quot;PlaneObserver&quot; (powered by JaCoCo from EclEmma)</a> &gt; <a href="index.source.html" class="el_package">planeobserver</a> &gt; <span class="el_source">Plane.java</span></div><h1>Plane.java</h1><pre class="source lang-java linenums">/**
+ * @author Christopher Burrell
+ * Student number 7145969
+ * ICA 1 - Part 2
+ * Airport routing controller
+ * Observer design pattern
+ */
+package planeobserver;
+
+import java.util.ArrayList;
+
+/**
+ * Plane class
+ */
+public class Plane implements PlaneSubject
+{
+    private String aircraftId;
+    private int parkingBayNumber;
+    private boolean parked;
+    private ArrayList&lt;PlaneObserver&gt; observers;
+
+    /**
+     * Constructor for Plane object
+     * @param aircraftId unique identifier for Plane object
+     */       
+    Plane(String aircraftId)
+<span class="fc" id="L27">    {</span>
+<span class="fc" id="L28">        this.aircraftId = aircraftId;</span>
+<span class="fc" id="L29">        parkingBayNumber = 0;</span>
+<span class="fc" id="L30">        observers = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L31">        parked = false;</span>
+<span class="fc" id="L32">    }</span>
+    
+    /**
+     * updates parking bay number for plane then notifies plane observers
+     * @param parkingBayNumber parking bay number plane has been assigned to park at
+     */
+    public void assignBay(int parkingBayNumber)
+    {
+<span class="fc" id="L40">        this.parkingBayNumber = parkingBayNumber;</span>
+<span class="fc" id="L41">        System.out.println(&quot;\n\n\n\nParking bay &quot; + parkingBayNumber +</span>
+                 &quot; assigned to aircraft &quot; + aircraftId + &quot;\n&quot;);
+<span class="fc" id="L43">        notifyObserversAssignedBay();</span>
+<span class="fc" id="L44">    }</span>
+    
+    /**
+     * Notify plane observers of an assigned parking bay for a plane
+     */
+    @Override
+    public void notifyObserversAssignedBay() 
+    {
+<span class="fc bfc" id="L52" title="All 2 branches covered.">        for (PlaneObserver o : observers)</span>
+        {
+<span class="fc" id="L54">            System.out.println(&quot;Notifying &quot; + o.getClass().getSimpleName() + </span>
+                    &quot; observer of plane &quot; + aircraftId + &quot; assignment to &quot;
+                            + &quot;parking bay &quot; + parkingBayNumber + &quot;.&quot;);
+<span class="fc" id="L57">            o.updateBayAssigned(parkingBayNumber,aircraftId);</span>
+<span class="fc" id="L58">        }        </span>
+<span class="fc" id="L59">    }</span>
+    
+    /**
+     * Parks plane then notifies plane observers
+     */
+    public void park()
+    {
+<span class="fc bfc" id="L66" title="All 2 branches covered.">        if (!parked)</span>
+        {
+<span class="fc" id="L68">            parked = true;</span>
+<span class="fc" id="L69">            System.out.println(&quot;\n\n\n\nPlane &quot; + aircraftId + &quot; parked at &quot;</span>
+                    + &quot;parking bay &quot; + this.parkingBayNumber + &quot;.\n&quot;);
+<span class="fc" id="L71">            notifyObserversPlaneParked();            </span>
+        }
+        else
+        {
+<span class="fc" id="L75">            System.out.println(&quot;Plane already parked.  Method call to &quot;</span>
+                    + &quot;investigate&quot;);
+        }
+
+<span class="fc" id="L79">    }    </span>
+    
+    /**
+     * Notify plane observers that a plane is ready to be resupplied
+     */
+    @Override
+    public void notifyObserversPlaneParked() 
+    {
+<span class="fc bfc" id="L87" title="All 2 branches covered.">        for (PlaneObserver o : observers)</span>
+        {
+<span class="fc" id="L89">            System.out.println(&quot;Notifying &quot; + o.getClass().getSimpleName() + </span>
+                    &quot;observer that plane &quot; + aircraftId + &quot; has parked.&quot;);
+<span class="fc" id="L91">            o.updatePlaneParked(parkingBayNumber);</span>
+<span class="fc" id="L92">        }   </span>
+<span class="fc" id="L93">    }    </span>
+    
+    /**
+     * Register a plane observer
+     * @param o Observer to be registered
+     */
+    @Override
+    public void registerObserver(PlaneObserver o) 
+    {
+<span class="fc bfc" id="L102" title="All 4 branches covered.">        if(!observers.contains(o) &amp;&amp; o != null)</span>
+        {
+<span class="fc" id="L104">        this.observers.add(o);</span>
+        }
+<span class="fc" id="L106">    }</span>
+
+    /**
+     * Unregister a plane observer
+     * @param o Observer to be unregistered
+     */
+    @Override
+    public void unregisterObserver(PlaneObserver o) 
+    {
+<span class="fc" id="L115">        this.observers.remove(o);        </span>
+<span class="fc" id="L116">    }</span>
+ 
+    /**
+     * Get aircraftId
+     * @return aircraftId
+     */    
+    public String getAircraftId()
+    {
+<span class="fc" id="L124">        return aircraftId;</span>
+    }
+    
+    /**
+     * Get parkingBayNumber
+     * @return parkingBayNumber
+     */ 
+    public int getParkingBayNumber() 
+    {
+<span class="fc" id="L133">        return parkingBayNumber;</span>
+    }
+
+    /**
+     * Get parked
+     * @return parked
+     */     
+    public boolean isParked() 
+    {
+<span class="fc" id="L142">        return parked;</span>
+    }
+    
+    /**
+     * Get observers
+     * @return observers
+     */ 
+    public ArrayList&lt;PlaneObserver&gt; getObservers() 
+    {
+<span class="fc" id="L151">        return observers;</span>
+    }
+
+    /**
+     * Set aircraftId
+     * @param aircraftId id of aircraft
+     */  
+    public void setAircraftId(String aircraftId) 
+    {
+<span class="fc" id="L160">        this.aircraftId = aircraftId;</span>
+<span class="fc" id="L161">    }</span>
+
+    /**
+     * Set parkingBayNumber
+     * @param parkingBayNumber parking bay number
+     */      
+    public void setParkingBayNumber(int parkingBayNumber) 
+    {
+<span class="fc" id="L169">        this.parkingBayNumber = parkingBayNumber;</span>
+<span class="fc" id="L170">    }</span>
+    
+    /**
+     * Set parked
+     * @param parked true if plane is parked
+     */  
+    public void setParked(boolean parked) 
+    {
+<span class="fc" id="L178">        this.parked = parked;</span>
+<span class="fc" id="L179">    }</span>
+    
+    /**
+     * Set observers
+     * @param observers list of observers
+     */      
+    public void setObservers(ArrayList&lt;PlaneObserver&gt; observers) 
+    {
+<span class="fc" id="L187">        this.observers = observers;</span>
+<span class="fc" id="L188">    }    </span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.6.201602180812</span></div></body></html>
